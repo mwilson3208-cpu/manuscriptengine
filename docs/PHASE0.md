@@ -16,7 +16,15 @@ Phase 0 is the prompt pipeline as a command-line tool. It takes one book input f
 2. Book input: copy `examples/book-input.example.json`. Put your real examples, stories, and reader phrases under `materials`. The brief uses them first and marks anything it had to propose with `PROPOSED:` so you can replace it.
 3. If you already have a finished brief, add it as `"brief": {...}` in the input file with the fields in `eval/fixtures/brief.json`. The brief step is then skipped and your brief is treated as approved.
 
-## Run a book
+## Run a book in the browser (Studio)
+
+```bash
+pnpm studio
+```
+
+Open http://localhost:4310. The Studio is a local page for everything below: New book, Run, edit and approve the brief and outline, read chapters, version history with Restore, change logs with Revert per change, Apply or Skip at the 40 percent cap, Regenerate with a note, manual edits, claims, and downloads. It runs only on your computer, on the same Claude login, and works on the same book folders as the commands below, so you can switch between them. Stopping the Studio stops a running job; press Run again to continue where it left off.
+
+## Run a book from the terminal
 
 ```bash
 pnpm phase0 run my-book.json

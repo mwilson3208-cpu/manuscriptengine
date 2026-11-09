@@ -1,0 +1,387 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Manuscript Studio</title>
+<style>
+  :root {
+    --bg: #fbfaf7; --panel: #ffffff; --ink: #1d1d1b; --muted: #6b6a66; --line: #e3e0d8;
+    --accent: #2f5d8a; --accent-ink: #ffffff; --ok: #2e7d4f; --warn: #a15c00; --bad: #b3261e;
+    --add: #e3f4e8; --add-ink: #1f5f36; --del: #fbe4e2; --del-ink: #8c1d16;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #161614; --panel: #1f1f1c; --ink: #ecebe6; --muted: #a3a29c; --line: #34332f;
+      --accent: #7fb0e0; --accent-ink: #10202f; --ok: #6fcf97; --warn: #f2b25c; --bad: #ff8a80;
+      --add: #1d3a27; --add-ink: #a8e6bd; --del: #45201d; --del-ink: #ffb4ab;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  header { display: flex; align-items: center; gap: 16px; padding: 12px 24px; border-bottom: 1px solid var(--line); background: var(--panel); position: sticky; top: 0; z-index: 2; }
+  header a { color: var(--ink); text-decoration: none; font-weight: 600; }
+  header .provider { margin-left: auto; color: var(--muted); font-size: 13px; }
+  main { max-width: 1180px; margin: 0 auto; padding: 24px; }
+  h1 { font-size: 22px; margin: 0 0 4px; }
+  h2 { font-size: 17px; margin: 24px 0 8px; }
+  .muted { color: var(--muted); }
+  .row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .spread { justify-content: space-between; }
+  button, .button { font: inherit; padding: 6px 12px; border-radius: 6px; border: 1px solid var(--line); background: var(--panel); color: var(--ink); cursor: pointer; text-decoration: none; display: inline-block; }
+  button.primary, .button.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+  button.danger { color: var(--bad); }
+  button:disabled { opacity: 0.5; cursor: not-allowed; }
+  input, select, textarea { font: inherit; color: var(--ink); background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 6px 8px; }
+  textarea { width: 100%; min-height: 360px; font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 13px; line-height: 1.45; }
+  textarea.prose { font-family: Georgia, "Iowan Old Style", serif; font-size: 17px; line-height: 1.6; min-height: 520px; }
+  table { width: 100%; border-collapse: collapse; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); font-weight: 600; }
+  tr.click { cursor: pointer; }
+  tr.click:hover td { background: color-mix(in srgb, var(--accent) 7%, transparent); }
+  .badge { display: inline-block; padding: 1px 8px; border-radius: 999px; font-size: 12px; border: 1px solid var(--line); color: var(--muted); white-space: nowrap; }
+  .badge.ok { color: var(--ok); border-color: currentColor; }
+  .badge.warn { color: var(--warn); border-color: currentColor; }
+  .badge.bad { color: var(--bad); border-color: currentColor; }
+  .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 16px; margin: 12px 0; }
+  .panel.alert { border-color: var(--warn); }
+  .tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--line); margin-top: 16px; }
+  .tabs button { border: none; border-bottom: 2px solid transparent; border-radius: 0; background: none; padding: 8px 12px; color: var(--muted); }
+  .tabs button.active { color: var(--ink); border-bottom-color: var(--accent); }
+  .log { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 12px; max-height: 180px; overflow: auto; white-space: pre-wrap; background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 8px; margin-top: 8px; }
+  .reader { font-family: Georgia, "Iowan Old Style", "Palatino Linotype", serif; font-size: 19px; line-height: 1.65; max-width: 68ch; margin: 0 auto; padding: 8px 0 40px; }
+  .reader h2, .reader h3, .reader h4 { font-family: system-ui, sans-serif; }
+  .diff { font-family: Georgia, serif; font-size: 17px; line-height: 1.6; white-space: pre-wrap; max-height: 520px; overflow: auto; }
+  ins { background: var(--add); color: var(--add-ink); text-decoration: none; }
+  del { background: var(--del); color: var(--del-ink); }
+  .change { border-top: 1px solid var(--line); padding: 10px 0; }
+  .change .before, .change .after { font-family: Georgia, serif; font-size: 15px; padding: 4px 8px; border-radius: 4px; margin: 4px 0; white-space: pre-wrap; }
+  .change .before { background: var(--del); color: var(--del-ink); }
+  .change .after { background: var(--add); color: var(--add-ink); }
+  .grid2 { display: grid; grid-template-columns: 280px 1fr; gap: 20px; }
+  .side { position: sticky; top: 70px; align-self: start; max-height: calc(100vh - 90px); overflow: auto; }
+  .side a { display: block; padding: 6px 8px; border-radius: 6px; color: var(--ink); text-decoration: none; }
+  .side a.active { background: color-mix(in srgb, var(--accent) 14%, transparent); }
+  .toast { position: fixed; bottom: 20px; right: 20px; background: var(--ink); color: var(--bg); padding: 10px 14px; border-radius: 8px; max-width: 460px; white-space: pre-wrap; z-index: 9; }
+  .toast.error { background: var(--bad); color: #fff; }
+  @media (max-width: 800px) { .grid2 { grid-template-columns: 1fr; } .side { position: static; max-height: none; } }
+</style>
+</head>
+<body>
+<header>
+  <a href="#/">Manuscript Studio</a>
+  <span class="muted">Phase 0</span>
+  <span class="provider" id="provider"></span>
+</header>
+<main id="app">Loading...</main>
+<script>
+"use strict";
+const app = document.getElementById("app");
+let meta = null;
+let pollTimer = null;
+const ui = { tab: "chapters", section: null, version: null, editing: false };
+
+function esc(s) {
+  return String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+}
+function toast(msg, isError) {
+  const t = document.createElement("div");
+  t.className = "toast" + (isError ? " error" : "");
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), isError ? 9000 : 4000);
+}
+async function api(path, body) {
+  const opts = body === undefined ? {} : { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) };
+  const r = await fetch("/api" + path, opts);
+  const data = r.headers.get("content-type")?.includes("json") ? await r.json() : await r.text();
+  if (!r.ok) throw new Error((data && data.error) || r.statusText);
+  return data;
+}
+async function act(fn, after) {
+  try {
+    const r = await fn();
+    if (r && r.message) toast(r.message);
+    if (after) await after(r);
+  } catch (e) {
+    toast(e.message, true);
+  }
+}
+function fmtDate(s) { return s ? new Date(s).toLocaleString() : ""; }
+function stageBadge(stage) {
+  const cls = /Waiting|review/i.test(stage) ? "warn" : /Edited/.test(stage) ? "ok" : "";
+  return `<span class="badge ${cls}">${esc(stage)}</span>`;
+}
+
+/* ---------------- Routing ---------------- */
+window.addEventListener("hashchange", render);
+async function render() {
+  clearInterval(pollTimer);
+  const m = location.hash.match(/^#\/book\/([a-z0-9-]+)/);
+  try {
+    if (!meta) {
+      meta = await api("/meta");
+      document.getElementById("provider").textContent = "AI: " + meta.provider;
+    }
+    if (m) await renderBook(m[1]);
+    else if (location.hash === "#/new") renderNew();
+    else await renderLibrary();
+  } catch (e) {
+    app.innerHTML = `<div class="panel alert">${esc(e.message)}</div>`;
+  }
+}
+
+/* ---------------- Library ---------------- */
+async function renderLibrary() {
+  const books = await api("/books");
+  app.innerHTML = `
+    <div class="row spread"><h1>Library</h1><a class="button primary" href="#/new">New book</a></div>
+    ${books.length === 0 ? `<div class="panel muted">No books yet. Start one with New book.</div>` : `
+    <table><thead><tr><th>Title</th><th>Lane</th><th>Author</th><th>Stage</th><th>Words</th><th>Last activity</th></tr></thead><tbody>
+    ${books.map((b) => `<tr class="click" data-slug="${esc(b.slug)}">
+      <td><strong>${esc(b.title)}</strong>${b.job === "running" ? ` <span class="badge warn">running</span>` : ""}</td>
+      <td>${esc(b.lane)}</td><td>${esc(b.author)}</td><td>${stageBadge(b.stage)}</td>
+      <td>${b.words.toLocaleString()} / ${b.target.toLocaleString()}</td><td class="muted">${esc(fmtDate(b.updated))}</td></tr>`).join("")}
+    </tbody></table>`}`;
+  app.querySelectorAll("tr[data-slug]").forEach((tr) => tr.addEventListener("click", () => { ui.section = null; ui.tab = "chapters"; location.hash = "#/book/" + tr.dataset.slug; }));
+}
+
+function renderNew() {
+  const ex = meta.examples || { input: "{}", voice: "{}" };
+  app.innerHTML = `
+    <h1>New book</h1>
+    <p class="muted">Fill in every REPLACE. Real examples and reader language under materials make the biggest difference. If you already have a finished brief, add it as "brief" and the brief step is skipped.</p>
+    <div class="grid2" style="grid-template-columns: 1fr 1fr">
+      <div><h2>Book input</h2><textarea id="input">${esc(ex.input)}</textarea></div>
+      <div><h2>Voice profile</h2><textarea id="voice">${esc(ex.voice)}</textarea></div>
+    </div>
+    <div class="row" style="margin-top:12px"><button class="primary" id="create">Create book</button><a class="button" href="#/">Cancel</a></div>`;
+  document.getElementById("create").onclick = () => act(
+    () => api("/books", { input: document.getElementById("input").value, voice: document.getElementById("voice").value }),
+    (r) => { location.hash = "#/book/" + r.slug; },
+  );
+}
+
+/* ---------------- Book ---------------- */
+async function renderBook(slug) {
+  const b = await api("/books/" + slug);
+  const running = b.job && b.job.status === "running";
+  const title = b.brief ? b.brief.data.title : b.input.working_title;
+  app.innerHTML = `
+    <div class="row spread">
+      <div><a href="#/" class="muted">Library</a><h1>${esc(title)}</h1>
+        <div class="row muted">${stageBadge(b.stage)} <span>${esc(b.input.lane)}</span><span>${esc(b.input.author_name)}</span><span>Voice: ${esc(b.voiceName)}</span>
+        <span>${b.usage.calls} AI calls, ${b.usage.tokensIn.toLocaleString()} in, ${b.usage.tokensOut.toLocaleString()} out</span></div></div>
+      <div class="row">
+        <button class="primary" id="run" ${running ? "disabled" : ""}>${running ? "Running..." : nextLabel(b)}</button>
+        <button id="docx" ${running ? "disabled" : ""}>Rebuild DOCX</button>
+      </div>
+    </div>
+    <div class="row" style="margin-top:8px">
+      ${b.files.docx ? `<a class="button" href="/api/books/${slug}/file/docx">Download DOCX</a>` : ""}
+      ${b.files.report ? `<a class="button" target="_blank" href="/api/books/${slug}/file/report.md">report.md</a>` : ""}
+      ${b.files.changeLog ? `<a class="button" target="_blank" href="/api/books/${slug}/file/change-log.md">change-log.md</a>` : ""}
+      ${b.files.qaFailed ? `<span class="badge bad">QA failed: see report</span>` : ""}
+    </div>
+    <div id="job"></div>
+    <div id="pending"></div>
+    <div class="tabs">${["chapters", "brief", "outline", "claims", "report"].map((t) => `<button data-tab="${t}" class="${ui.tab === t ? "active" : ""}">${t[0].toUpperCase() + t.slice(1)}</button>`).join("")}</div>
+    <div id="tab"></div>`;
+  document.getElementById("run").onclick = () => act(() => api(`/books/${slug}/run`, {}), () => renderBook(slug));
+  document.getElementById("docx").onclick = () => act(() => api(`/books/${slug}/docx`, {}), () => renderBook(slug));
+  app.querySelectorAll("[data-tab]").forEach((el) => el.addEventListener("click", () => { ui.tab = el.dataset.tab; ui.editing = false; renderBook(slug); }));
+  renderJob(b.job);
+  if (b.pending) await renderPending(slug);
+  await renderTab(slug, b);
+  if (running) pollJob(slug);
+}
+
+function nextLabel(b) {
+  if (!b.brief) return "Generate brief";
+  if (b.brief.status !== "approved") return "Continue";
+  if (!b.outline) return "Generate outline";
+  if (b.pending) return "Continue";
+  return "Run";
+}
+
+function renderJob(job) {
+  const el = document.getElementById("job");
+  if (!el || !job) return;
+  const cls = job.status === "failed" ? "bad" : job.status === "done" ? "ok" : "warn";
+  el.innerHTML = `<div class="panel"><div class="row"><span class="badge ${cls}">${esc(job.kind)}: ${esc(job.status)}</span>
+    <span class="muted">started ${esc(fmtDate(job.startedAt))}</span>${job.result ? `<span>${esc(job.result)}</span>` : ""}</div>
+    <div class="log" id="joblog">${esc(job.log.join("\n"))}</div></div>`;
+  const log = document.getElementById("joblog");
+  log.scrollTop = log.scrollHeight;
+}
+
+function pollJob(slug) {
+  clearInterval(pollTimer);
+  pollTimer = setInterval(async () => {
+    try {
+      const job = await api(`/books/${slug}/job`);
+      renderJob(job);
+      if (!job || job.status !== "running") {
+        clearInterval(pollTimer);
+        toast(job ? job.result || job.status : "Done", job && job.status === "failed");
+        renderBook(slug);
+      }
+    } catch (e) { clearInterval(pollTimer); }
+  }, 2000);
+}
+
+async function renderPending(slug) {
+  const p = await api(`/books/${slug}/pending`);
+  if (!p) return;
+  const diff = p.diff.map((h) => h.op === "add" ? `<ins>${esc(h.text)}</ins>` : h.op === "del" ? `<del>${esc(h.text)}</del>` : esc(h.text)).join("");
+  document.getElementById("pending").innerHTML = `
+    <div class="panel alert">
+      <div class="row spread"><strong>The ${esc(p.pass)} pass on ${esc(p.sectionKey)} would change ${Math.round(p.ratio * 100)} percent of the text (cap 40).</strong>
+        <div class="row"><button class="primary" id="apply">Apply</button><button id="skip">Skip</button></div></div>
+      <p class="muted">${esc(p.summary)}</p>
+      ${p.log.flags.length ? `<p><strong>Flags:</strong></p><ul>${p.log.flags.map((f) => `<li>[${esc(f.type)}] ${esc(f.location)} ${esc(f.note)}</li>`).join("")}</ul>` : ""}
+      <div class="diff">${diff}</div>
+    </div>`;
+  document.getElementById("apply").onclick = () => act(() => api(`/books/${slug}/resolve`, { decision: "apply" }), () => renderBook(slug));
+  document.getElementById("skip").onclick = () => act(() => api(`/books/${slug}/resolve`, { decision: "skip" }), () => renderBook(slug));
+}
+
+async function renderTab(slug, b) {
+  const el = document.getElementById("tab");
+  if (ui.tab === "brief") return renderGate(el, slug, "brief", b.brief, null);
+  if (ui.tab === "outline") return renderGate(el, slug, "outline", b.outline, b.outline ? b.outline.violations : null);
+  if (ui.tab === "claims") return renderClaims(el, slug, b);
+  if (ui.tab === "report") {
+    if (!b.files.report) { el.innerHTML = `<div class="panel muted">The report is written when the book finishes.</div>`; return; }
+    const text = await fetch(`/api/books/${slug}/file/report.md`).then((r) => r.text());
+    el.innerHTML = `<div class="panel"><pre style="white-space:pre-wrap;font-size:14px">${esc(text)}</pre></div>`;
+    return;
+  }
+  return renderChapters(el, slug, b);
+}
+
+function renderGate(el, slug, which, gate, violations) {
+  if (!gate) { el.innerHTML = `<div class="panel muted">No ${which} yet. Press ${which === "brief" ? "Generate brief" : "Generate outline"} above.</div>`; return; }
+  const approved = gate.status === "approved";
+  el.innerHTML = `
+    <div class="row spread" style="margin-top:12px"><div>${approved ? `<span class="badge ok">approved ${esc(fmtDate(gate.lockedAt))}</span>` : `<span class="badge warn">draft: review, edit, approve</span>`}</div>
+      <div class="row"><button id="save">Save</button><button class="primary" id="approve">${approved ? "Save and re-approve" : "Save and approve"}</button>
+      ${which === "outline" ? `<button class="danger" id="force">Approve despite violations</button>` : ""}</div></div>
+    ${violations && violations.length ? `<div class="panel alert"><strong>${violations.length} check(s) fail:</strong><ul>${violations.map((v) => `<li>${esc(v)}</li>`).join("")}</ul></div>` : ""}
+    ${approved && which === "brief" ? `<p class="muted">Editing an approved brief flags every chapter for a drift check on the developmental pass.</p>` : ""}
+    ${approved && which === "outline" ? `<p class="muted">The outline is locked once drafting starts. Regenerate single chapters instead.</p>` : ""}
+    <textarea id="gate">${esc(JSON.stringify(gate.data, null, 2))}</textarea>`;
+  const data = () => document.getElementById("gate").value;
+  document.getElementById("save").onclick = () => act(() => api(`/books/${slug}/${which}`, { data: data() }));
+  document.getElementById("approve").onclick = () => act(() => api(`/books/${slug}/${which}`, { data: data(), approve: true }), () => renderBook(slug));
+  const force = document.getElementById("force");
+  if (force) force.onclick = () => { if (confirm("Approve the outline even though checks fail?")) act(() => api(`/books/${slug}/outline`, { data: data(), approve: true, force: true }), () => renderBook(slug)); };
+}
+
+function passCell(s) {
+  const names = ["dev", "line", "copy", "proof"];
+  return s.passes.map((st, i) => {
+    if (!st) return `<span class="badge">${names[i]}</span>`;
+    const cls = st === "done" || st === "no_change" ? "ok" : st === "skipped" ? "warn" : "";
+    return `<span class="badge ${cls}" title="${esc(st)}">${names[i]}</span>`;
+  }).join(" ");
+}
+
+async function renderChapters(el, slug, b) {
+  if (!b.sections.length) { el.innerHTML = `<div class="panel muted">Chapters appear after the outline is approved.</div>`; return; }
+  const key = ui.section && b.sections.some((s) => s.key === ui.section) ? ui.section : (b.sections.find((s) => s.current) || b.sections[0]).key;
+  ui.section = key;
+  el.innerHTML = `<div class="grid2" style="margin-top:16px">
+    <nav class="side">${b.sections.map((s) => `<a href="javascript:void 0" data-key="${esc(s.key)}" class="${s.key === key ? "active" : ""}">
+      <div>${s.kind === "chapter" ? s.position + ". " : ""}${esc(s.title)}</div>
+      <div class="muted" style="font-size:12px">${s.current ? `v${s.current.n} ${esc(s.current.source)}, ${s.current.wordCount} words` : "not drafted"}${s.openFlags ? `, ${s.openFlags} flags` : ""}${s.final ? ", final" : ""}${s.pinned ? ", pinned" : ""}</div>
+      <div style="margin-top:2px">${passCell(s)}</div></a>`).join("")}</nav>
+    <section id="sectionview"></section></div>`;
+  el.querySelectorAll("[data-key]").forEach((a) => a.addEventListener("click", () => { ui.section = a.dataset.key; ui.version = null; ui.editing = false; renderChapters(el, slug, b); }));
+  const s = b.sections.find((x) => x.key === key);
+  await renderSection(document.getElementById("sectionview"), slug, s, b);
+}
+
+async function renderSection(el, slug, s, b) {
+  if (!s.current) { el.innerHTML = `<div class="panel muted">Not drafted yet. Press Run.</div>`; return; }
+  const data = await api(`/books/${slug}/section/${s.key}${ui.version ? "/" + ui.version : ""}`);
+  const v = data.version;
+  const isCurrent = v.n === data.currentN;
+  const running = b.job && b.job.status === "running";
+  el.innerHTML = `
+    <div class="row spread">
+      <div class="row">
+        <select id="ver">${s.versions.slice().reverse().map((x) => `<option value="${x.n}" ${x.n === v.n ? "selected" : ""}>v${x.n} ${esc(x.source)}${x.n === data.currentN ? " (current)" : ""}, ${x.wordCount} words</option>`).join("")}</select>
+        ${isCurrent ? "" : `<button class="primary" id="restore">Restore this version</button>`}
+      </div>
+      <div class="row">
+        <button id="edit">${ui.editing ? "Cancel edit" : "Edit"}</button>
+        ${s.kind === "chapter" ? `<button id="regen" ${running ? "disabled" : ""}>Regenerate</button>` : ""}
+        <label class="row"><input type="checkbox" id="final" ${s.final ? "checked" : ""}> final</label>
+        <label class="row"><input type="checkbox" id="pinned" ${s.pinned ? "checked" : ""}> pinned</label>
+      </div>
+    </div>
+    ${v.note ? `<p class="muted">${esc(v.note)}</p>` : ""}
+    ${v.flags.length ? `<div class="panel">${v.flags.map((f) => `<div>[${esc(f.type)}] ${esc(f.note)}</div>`).join("")}</div>` : ""}
+    <div id="body"></div>
+    <h2>Change logs</h2>
+    <div id="logs"></div>`;
+  const body = document.getElementById("body");
+  if (ui.editing) {
+    body.innerHTML = `<textarea class="prose" id="content">${esc(v.content)}</textarea>
+      <div class="row" style="margin-top:8px"><input id="note" placeholder="What you changed" style="flex:1"><button class="primary" id="savemanual">Save as new version</button></div>`;
+    document.getElementById("savemanual").onclick = () => act(
+      () => api(`/books/${slug}/manual`, { key: s.key, content: document.getElementById("content").value, note: document.getElementById("note").value || "manual edit" }),
+      () => { ui.editing = false; ui.version = null; renderBook(slug); });
+  } else {
+    body.innerHTML = `<article class="reader">${data.html}</article>`;
+  }
+  document.getElementById("ver").onchange = (e) => { ui.version = Number(e.target.value); ui.editing = false; renderSection(el, slug, s, b); };
+  const restore = document.getElementById("restore");
+  if (restore) restore.onclick = () => act(() => api(`/books/${slug}/restore`, { key: s.key, n: v.n }), () => { ui.version = null; renderBook(slug); });
+  document.getElementById("edit").onclick = () => { ui.editing = !ui.editing; renderSection(el, slug, s, b); };
+  const regen = document.getElementById("regen");
+  if (regen) regen.onclick = () => {
+    const note = prompt("Direction for the regeneration (for example: shorter opening, more practical, add a second example):");
+    if (note === null) return;
+    act(() => api(`/books/${slug}/regen`, { position: s.position, note }), () => renderBook(slug));
+  };
+  document.getElementById("final").onchange = (e) => act(() => api(`/books/${slug}/flag`, { key: s.key, flag: "final", value: e.target.checked }));
+  document.getElementById("pinned").onchange = (e) => act(() => api(`/books/${slug}/flag`, { key: s.key, flag: "pinned", value: e.target.checked }));
+
+  const logs = document.getElementById("logs");
+  if (!data.changeLogs.length) { logs.innerHTML = `<p class="muted">No edit passes have run on this section yet.</p>`; return; }
+  logs.innerHTML = data.changeLogs.map((l) => `
+    <div class="panel">
+      <div class="row spread"><strong>${esc(l.pass)} pass</strong><span class="muted">${esc(l.summary)}</span></div>
+      ${l.guardReverts.length ? `<div class="muted">Reverted by guards: ${l.guardReverts.map((g) => `change ${g.n} (${esc(g.guard)}: ${esc(g.reason)})`).join("; ")}</div>` : ""}
+      ${l.flags.length ? `<ul>${l.flags.map((f) => `<li><span class="badge warn">${esc(f.type)}</span> ${esc(f.location)} ${esc(f.note)}</li>`).join("")}</ul>` : ""}
+      ${l.changes.map((c) => `<div class="change">
+        <div class="row spread"><span><strong>${c.n}.</strong> ${esc(c.type)}${c.location ? ", " + esc(c.location) : ""}${c.reason ? ": " + esc(c.reason) : ""}</span>
+        <button data-log="${esc(l.id)}" data-n="${c.n}">Revert</button></div>
+        <div class="before">${esc(c.before) || "(nothing)"}</div><div class="after">${esc(c.after) || "(cut)"}</div></div>`).join("")}
+    </div>`).join("");
+  logs.querySelectorAll("button[data-log]").forEach((btn) => btn.addEventListener("click", () =>
+    act(() => api(`/books/${slug}/revert`, { logId: btn.dataset.log, n: Number(btn.dataset.n) }), () => { ui.version = null; renderBook(slug); })));
+}
+
+function renderClaims(el, slug, b) {
+  if (!b.claims.length) { el.innerHTML = `<div class="panel muted">The claim ledger is seeded from the draft before the edit passes run.</div>`; return; }
+  el.innerHTML = `<p class="muted">The copy pass flags every claim that is not Verified. Mark each one before the copy pass runs.</p>
+    <table><thead><tr><th>Id</th><th>Section</th><th>Claim</th><th>Status</th><th>Source</th></tr></thead><tbody>
+    ${b.claims.map((c, i) => `<tr><td>${esc(c.id)}</td><td>${esc(c.sectionKey)}</td><td>${esc(c.text)}</td>
+      <td><select data-i="${i}" class="cstatus">${["Needs source", "Verified", "Cut"].map((st) => `<option ${st === c.status ? "selected" : ""}>${st}</option>`).join("")}</select></td>
+      <td><input data-i="${i}" class="csource" value="${esc(c.source)}" placeholder="source"></td></tr>`).join("")}
+    </tbody></table>
+    <div class="row" style="margin-top:12px"><button class="primary" id="saveclaims">Save claims</button></div>`;
+  document.getElementById("saveclaims").onclick = () => {
+    const claims = b.claims.map((c, i) => ({ ...c, status: el.querySelector(`.cstatus[data-i="${i}"]`).value, source: el.querySelector(`.csource[data-i="${i}"]`).value }));
+    act(() => api(`/books/${slug}/claims`, { claims }), () => renderBook(slug));
+  };
+}
+
+render();
+</script>
+</body>
+</html>

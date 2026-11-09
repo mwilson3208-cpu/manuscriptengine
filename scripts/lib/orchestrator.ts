@@ -680,7 +680,7 @@ function oneLine(s: string): string {
 function pendingMessage(state: BookState): string {
   const p = state.pending;
   if (!p) return "";
-  return `The ${p.pass} pass on ${p.sectionKey} would change ${Math.round(p.ratio * 100)} percent of the text (cap 40). ${p.summary}\nRead pending/${p.pass}-${p.sectionKey}.md, then run: pnpm phase0 resolve <book dir> apply|skip`;
+  return `The ${p.pass} pass on ${p.sectionKey} would change ${Math.round(p.ratio * 100)} percent of the text (cap 40). ${p.summary}\nChoose Apply or Skip in the Studio, or read pending/${p.pass}-${p.sectionKey}.md and run: pnpm phase0 resolve <book dir> apply|skip`;
 }
 
 function summaryAt(state: BookState, position: number): string {
