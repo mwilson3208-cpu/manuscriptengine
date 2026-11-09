@@ -9,7 +9,7 @@ export interface TextIssue {
   excerpt: string;
 }
 
-const KEEP_SYMBOLS = new Set(["©", "®", "™"]);
+const KEEP_SYMBOLS = new Set(["\u00A9", "\u00AE", "\u2122"]);
 /** Banned-list entries that name a construction enforced by its own check, not a word. */
 const CONSTRUCTION_ENTRIES = /^(em[ -]?dash(es)?|emojis?|en[ -]?dash(es)?)$/i;
 
@@ -54,7 +54,7 @@ export function countWords(markdown: string): number {
     .replace(/^\s*>\s?/gm, "")
     .replace(/^\s*([-*+]|\d+\.)\s+/gm, "")
     .replace(/[*_`]/g, " ");
-  return stripped.match(/[\p{L}\p{N}][\p{L}\p{N}'’-]*/gu)?.length ?? 0;
+  return stripped.match(/[\p{L}\p{N}][\p{L}\p{N}'\u2019-]*/gu)?.length ?? 0;
 }
 
 export function escapeRe(s: string): string {

@@ -4,29 +4,29 @@ import { countWords, findForbidden } from "./text";
 
 describe("sanitize: dashes", () => {
   it("turns paired em dashes around an aside into commas", () => {
-    const r = sanitize("The plan — the one you wrote last week — still works.");
+    const r = sanitize("The plan \u2014 the one you wrote last week \u2014 still works.");
     expect(r.text).toBe("The plan, the one you wrote last week, still works.");
     expect(r.report.emDashes).toBe(2);
   });
 
   it("uses a colon before a short tail", () => {
-    expect(sanitize("One thing matters—trust.").text).toBe("One thing matters: trust.");
+    expect(sanitize("One thing matters\u2014trust.").text).toBe("One thing matters: trust.");
   });
 
   it("uses a period before a new capitalized sentence", () => {
-    expect(sanitize("You tried that already — Most people stop there and never test the second version.").text).toBe(
+    expect(sanitize("You tried that already \u2014 Most people stop there and never test the second version.").text).toBe(
       "You tried that already. Most people stop there and never test the second version.",
     );
   });
 
   it("uses a comma before a longer lowercase clause", () => {
-    expect(sanitize("Send the note today — because the window closes when the week ends.").text).toBe(
+    expect(sanitize("Send the note today \u2014 because the window closes when the week ends.").text).toBe(
       "Send the note today, because the window closes when the week ends.",
     );
   });
 
   it("converts numeric en dash ranges to 'to'", () => {
-    const r = sanitize("Plan for 10–20 minutes, pages 3 – 7.");
+    const r = sanitize("Plan for 10\u201320 minutes, pages 3 \u2013 7.");
     expect(r.text).toBe("Plan for 10 to 20 minutes, pages 3 to 7.");
     expect(r.report.enDashes).toBe(2);
   });
@@ -43,15 +43,15 @@ describe("sanitize: dashes", () => {
   });
 
   it("drops a dash at the start or end of a line", () => {
-    expect(sanitize("— Anonymous").text).toBe("Anonymous");
-    expect(sanitize("And then —").text).toBe("And then");
+    expect(sanitize("\u2014 Anonymous").text).toBe("Anonymous");
+    expect(sanitize("And then \u2014").text).toBe("And then");
   });
 
   it("never leaves a dash behind", () => {
     const samples = [
-      "A — B — C — D.",
-      "Wait—what? Yes—no—maybe.",
-      "The ― bar and ⸺ two-em and ‒ figure.",
+      "A \u2014 B \u2014 C \u2014 D.",
+      "Wait\u2014what? Yes\u2014no\u2014maybe.",
+      "The \u2015 bar and \u2E3A two-em and \u2012 figure.",
     ];
     for (const s of samples) expect(findForbidden(sanitize(s).text)).toEqual([]);
   });
@@ -59,13 +59,13 @@ describe("sanitize: dashes", () => {
 
 describe("sanitize: emojis, quotes, blank lines", () => {
   it("strips emojis but keeps copyright, registered, and trademark signs", () => {
-    const r = sanitize("Copyright © 2026 🚀 Power Reads™ 👍🏽 done ✅.");
-    expect(r.text).toBe("Copyright © 2026 Power Reads™ done.");
+    const r = sanitize("Copyright \u00A9 2026 \u{1F680} Power Reads\u2122 \u{1F44D}\u{1F3FD} done \u2705.");
+    expect(r.text).toBe("Copyright \u00A9 2026 Power Reads\u2122 done.");
     expect(r.report.emojis).toBe(3);
   });
 
   it("normalizes curly quotes", () => {
-    const r = sanitize("“It’s fine,” she said.");
+    const r = sanitize("\u201CIt\u2019s fine,\u201D she said.");
     expect(r.text).toBe("\"It's fine,\" she said.");
     expect(r.report.quotes).toBe(3);
   });
@@ -82,7 +82,7 @@ describe("sanitize: emojis, quotes, blank lines", () => {
   });
 
   it("sanitizes every string in an object", () => {
-    const { value, report } = sanitizeDeep({ a: "x — y — z", b: ["“q”"], n: 3 });
+    const { value, report } = sanitizeDeep({ a: "x \u2014 y \u2014 z", b: ["\u201Cq\u201D"], n: 3 });
     expect(value).toEqual({ a: "x, y, z", b: ['"q"'], n: 3 });
     expect(report.emDashes).toBe(2);
     expect(report.quotes).toBe(2);
@@ -91,7 +91,7 @@ describe("sanitize: emojis, quotes, blank lines", () => {
 
 describe("findForbidden", () => {
   it("finds dashes, emojis, and banned terms with line numbers", () => {
-    const text = "Line one is fine.\nThis is a game-changer — really.\nGreat 😀";
+    const text = "Line one is fine.\nThis is a game-changer \u2014 really.\nGreat \u{1F600}";
     const issues = findForbidden(text, ["game-changer", "em dashes", "emojis"]);
     expect(issues.map((i) => [i.kind, i.line])).toEqual([
       ["em_dash", 2],

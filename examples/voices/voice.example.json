@@ -1,0 +1,26 @@
+{
+  "name": "REPLACE: profile name, for example Michael Wilson or a pen name",
+  "identity_type": "author",
+  "bio_short": "REPLACE: two-sentence bio. State credentials exactly; never invent any.",
+  "bio_long": "REPLACE: About the Author paragraph.",
+  "rules": {
+    "master_voice_prompt": "REPLACE: paste the Master Voice Prompt or the lane voice card here, as written.",
+    "perspective": "REPLACE: first person, second person, or both and when",
+    "sentence_length": { "min": 6, "max": 24 },
+    "paragraph_length": "REPLACE: for example two to four sentences",
+    "formality": "REPLACE",
+    "humor": "REPLACE: allowed or not, and how",
+    "lists_vs_prose": "REPLACE",
+    "signature_moves": {
+      "chapter_openers": "REPLACE: how chapters open",
+      "action_steps": "REPLACE: how action steps are framed",
+      "examples": "REPLACE: how examples are handled"
+    }
+  },
+  "preferred_terms": ["REPLACE"],
+  "banned_terms": ["REPLACE: hedging and generic coaching phrases you never use; the voice guard reverts any edit that adds one"],
+  "samples": [
+    { "title": "REPLACE", "text": "REPLACE: 200 to 400 words of unedited writing or dictation in this voice. Three to five samples." }
+  ],
+  "language": "en"
+}

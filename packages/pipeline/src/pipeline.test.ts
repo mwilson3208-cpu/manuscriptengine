@@ -19,7 +19,7 @@ const words = (n: number, w = "word") => Array.from({ length: n }, (_, i) => `${
 
 describe("runText and runJson", () => {
   it("sanitizes text output and records the template version and tokens", async () => {
-    const ai = new FakeAI(() => "Clean opening — really clean. 🚀");
+    const ai = new FakeAI(() => "Clean opening \u2014 really clean. \u{1F680}");
     const r = await runText(ai, "summary", { prior_summary: "x", chapter_index: 1, chapter_title: "t", chapter_markdown: "m", frameworks: "f" }, fast);
     expect(r.output).toBe("Clean opening: really clean.");
     expect(r.meta.promptVersion).toBe("summary@1.0.0");
@@ -156,11 +156,11 @@ describe("draft", () => {
   });
 
   it("drafts a chapter, strips a stray heading, sanitizes, and flags word count outside tolerance", async () => {
-    const ai = new FakeAI(() => `## Start With Five\n\nYou sit at your desk — the inbox is empty and the week is gone. ${words(100)}`);
+    const ai = new FakeAI(() => `## Start With Five\n\nYou sit at your desk \u2014 the inbox is empty and the week is gone. ${words(100)}`);
     const ctx = buildChapterContext({ brief: testBrief, outline: testOutline, voice: testVoice, position: 1, priorSummary: "" });
     const r = await draftChapter(ai, ctx, DEFAULT_SETTINGS, undefined, fast);
     expect(r.content.startsWith("You sit at your desk, the inbox")).toBe(true);
-    expect(r.content).not.toContain("—");
+    expect(r.content).not.toContain("\u2014");
     expect(r.flags[0]?.type).toBe("word_count");
     expect(ai.requests[0]?.user).toContain("You are writing chapter 1.");
     expect(ai.requests[0]?.user).not.toContain("Operator direction");

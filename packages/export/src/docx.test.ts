@@ -52,7 +52,7 @@ describe.skipIf(!hasPandoc)("renderDocx", () => {
     expect(statSync(out).size).toBeGreaterThan(5000);
     const { stdout } = await runPandoc(["--from", "docx", "--to", "plain", out]);
     expect(stdout).toContain("Chapter 1: Start With Five");
-    expect(stdout).not.toMatch(/[–—]/);
+    expect(stdout).not.toMatch(/[\u2013\u2014]/);
     expect(readFileSync(out).subarray(0, 2).toString()).toBe("PK");
   });
 });

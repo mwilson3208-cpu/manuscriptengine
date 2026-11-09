@@ -24,14 +24,14 @@ export interface SanitizeResult {
 }
 
 /** Characters treated as an em dash: em dash, horizontal bar, two- and three-em dashes. */
-export const EM_DASH_CHARS = "—―⸺⸻";
+export const EM_DASH_CHARS = "\u2014\u2015\u2E3A\u2E3B";
 /** Characters treated as an en dash: en dash, figure dash. */
-export const EN_DASH_CHARS = "–‒";
+export const EN_DASH_CHARS = "\u2013\u2012";
 
 const DASH_CLASS = `[${EM_DASH_CHARS}${EN_DASH_CHARS}]`;
-const KEEP_SYMBOLS = new Set(["©", "®", "™"]);
+const KEEP_SYMBOLS = new Set(["\u00A9", "\u00AE", "\u2122"]);
 const EMOJI_RE = /\p{Extended_Pictographic}/gu;
-const EMOJI_PARTS_RE = /[\u{1F3FB}-\u{1F3FF}\u{1F1E6}-\u{1F1FF}\u{E0020}-\u{E007F}️‍⃣]/gu;
+const EMOJI_PARTS_RE = /[\u{1F3FB}-\u{1F3FF}\u{1F1E6}-\u{1F1FF}\u{E0020}-\u{E007F}\uFE0F\u200D\u20E3]/gu;
 
 const THEMATIC_BREAK_RE = /^\s*([-*_])(\s*\1){2,}\s*$/;
 const TABLE_SEPARATOR_RE = /^\s*\|?(\s*:?-+:?\s*\|)+\s*:?-*:?\s*$/;
@@ -45,11 +45,11 @@ export function sanitize(input: string): SanitizeResult {
   let text = input.replace(/\r\n?/g, "\n");
 
   // Quotes
-  text = text.replace(/[“”„‟″]/g, () => {
+  text = text.replace(/[\u201C\u201D\u201E\u201F\u2033]/g, () => {
     report.quotes++;
     return '"';
   });
-  text = text.replace(/[‘’‚‛′]/g, () => {
+  text = text.replace(/[\u2018\u2019\u201A\u201B\u2032]/g, () => {
     report.quotes++;
     return "'";
   });
@@ -119,7 +119,7 @@ function stripEmojis(line: string, report: SanitizeReport): string {
 function replaceDashes(line: string, report: SanitizeReport): string {
   let out = line;
 
-  // Numeric ranges: 10–20 becomes 10 to 20.
+  // Numeric ranges: 10, en dash, 20 becomes "10 to 20".
   out = out.replace(new RegExp(`(\\d)\\s*(${DASH_CLASS})\\s*(?=\\d)`, "g"), (_m, d: string, dash: string) => {
     countDash(dash, report);
     return `${d} to `;
