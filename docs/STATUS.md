@@ -9,7 +9,7 @@ Phase 0: prompt pipeline. Code complete; exit test not started. Phase 0 is not c
 - `prompts/`: the eleven 1.0.0 templates, translated from `docs/sop.md` and `docs/publishing-system-v2.md`. Conflicts in `docs/prompt-notes.md`.
 - `packages/pipeline`: brief, outline with the four checks, draft with running summary, four edit passes with the 40 percent cap, voice and fact guards, numbered change logs, revert by number, claim ledger, matter.
 - `packages/export`: DOCX through Pandoc on a 6 x 9 reference document.
-- `pnpm studio`: a local browser console over the same pipeline (operator's choice, exception to non-negotiable 9 recorded in DECISIONS.md).
+- `pnpm studio`: a local browser console over the same pipeline (operator's choice; exception added to non-negotiable 9 in CLAUDE.md on `main`).
 - `scripts/phase0.ts` (runbook in `docs/PHASE0.md`) and `scripts/eval.ts`. Both run on the operator's Claude login through the Claude Code CLI, or on the API when a key is set.
 
 ## What the operator should test
@@ -27,7 +27,6 @@ One real call has run through the Claude CLI client (pain-queries, Sonnet 5.5, v
 2. `reader_job`, `outcome`, `examples` on the brief: in Phase 1, add three columns to `briefs`, or one `extras jsonb`? I recommend three columns.
 3. Voice-first drafting (v2): add a transcript cleanup template for Authority Lane books, or keep Phase 0 to AI-drafted Catalog Lane titles? I recommend the latter until the exit test passes.
 4. Settle the SPEC conflicts in `docs/prompt-notes.md`, items 6 to 9.
-5. Add the Studio exception to non-negotiable 9 in CLAUDE.md yourself (I may not edit that file); the line to paste is in the session summary.
 
 ## Next three items
 
