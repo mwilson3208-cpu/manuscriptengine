@@ -10,8 +10,8 @@
     "test": "vitest run",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "check": "pnpm typecheck && pnpm test",
-    "phase0": "tsx scripts/phase0.ts",
-    "eval": "tsx scripts/eval.ts"
+    "phase0": "tsx --env-file-if-exists=.env scripts/phase0.ts",
+    "eval": "tsx --env-file-if-exists=.env scripts/eval.ts"
   },
   "devDependencies": {
     "@types/node": "^26.6.6",
