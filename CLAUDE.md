@@ -28,7 +28,7 @@ These rules override convenience, speed, and your own preferences. If a task can
 6. No edit pass may change more than 40 percent of a chapter's text without stopping and asking.
 7. Long work runs in the worker as a job with progress, never in a request handler. Any operation over 10 seconds is a job.
 8. Prompt templates live in the repo under `prompts/` with semantic versions. Every generation records the template version used. Templates are never built from strings scattered in code.
-9. Phase 0 is a gate. Do not scaffold the UI until two manuscripts from the Phase 0 pipeline have been read and approved by the operator.
+9. Phase 0 is a gate. Do not scaffold the UI until two manuscripts from the Phase 0 pipeline have been read and approved by the operator. Exception approved by the operator on Nov 9, 2026: the Phase 0 Studio (`pnpm studio`), a local browser console for the Phase 0 pipeline. It runs only on the operator's machine on localhost, adds no dependencies, calls only `scripts/lib/orchestrator.ts`, and is replaced by the Phase 1 app. It is not the Phase 1 UI and does not open Phase 1.
 10. Ask before adding a dependency, a vendor, a table, or a stage that is not in `SPEC.md`.
 11. TypeScript strict mode everywhere. No `any` without a comment explaining why.
 12. Every API route and every job type has at least one test that runs in CI.
