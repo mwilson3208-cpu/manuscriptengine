@@ -1,4 +1,5 @@
 export * from "./ai";
+export * from "./claude-cli";
 export * from "./run";
 export * from "./settings";
 export * from "./render";

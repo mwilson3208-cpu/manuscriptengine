@@ -17,7 +17,6 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { createInterface } from "node:readline/promises";
 import { parseArgs } from "node:util";
-import { createAnthropicClient } from "@me/pipeline";
 import { EDIT_PASSES, type EditPass } from "@me/shared";
 import { BookStore } from "./lib/book-state";
 import {
@@ -37,7 +36,7 @@ import {
   type Operator,
   type RunConfig,
 } from "./lib/orchestrator";
-import { loadSettings, REPO_ROOT } from "./lib/settings";
+import { createClient, loadSettings, REPO_ROOT } from "./lib/settings";
 
 const { values, positionals } = parseArgs({
   allowPositionals: true,
@@ -88,8 +87,9 @@ function runConfig(): RunConfig {
   const settings = loadSettings();
   const passes = values.passes ? (values.passes.split(",").map((p) => p.trim()) as EditPass[]) : [...EDIT_PASSES];
   for (const p of passes) if (!EDIT_PASSES.includes(p)) throw new Error(`Unknown pass "${p}". Use ${EDIT_PASSES.join(", ")}`);
-  if (!process.env.ANTHROPIC_API_KEY) throw new Error("ANTHROPIC_API_KEY is not set. Copy .env.example to .env and run with: node --env-file=.env, or export the key.");
-  return { ai: createAnthropicClient(settings), settings, operator: makeOperator(values["on-cap"]), autoApprove: values.yes, passes };
+  const { ai, label } = createClient(settings);
+  console.log(`AI: ${label}`);
+  return { ai, settings, operator: makeOperator(values["on-cap"]), autoApprove: values.yes, passes };
 }
 
 function store(): BookStore {

@@ -20,6 +20,7 @@ export const DEFAULT_SETTINGS: PipelineSettings = {
   task_models: {},
   effort: null,
   refusal_fallback: true,
+  provider: "auto",
   chapter_min: 8,
   chapter_max: 12,
   word_tolerance: 0.1,

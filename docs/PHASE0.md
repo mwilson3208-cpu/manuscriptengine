@@ -6,8 +6,9 @@ Phase 0 is the prompt pipeline as a command-line tool. It takes one book input f
 
 1. Install Node 22, pnpm 10, and Pandoc 3 (`brew install pandoc` on a Mac).
 2. In the repo: `pnpm install`.
-3. Copy `.env.example` to `.env` and set `ANTHROPIC_API_KEY`. The `.env` file is ignored by git.
-4. Optional: change models in `config/settings.local.json` (not committed), for example `{"task_models": {"brief": "opus", "edit-dev": "opus"}}` to run the brief and developmental pass on Opus.
+3. Install Claude Code and run `claude` once to log in with your Claude account. Phase 0 runs every AI call through `claude -p` on that login, so no API key is needed. Each call is a fresh session with no tools, no project files, and no plugins, so the model sees only the template's prompt.
+4. Optional, API instead: copy `.env.example` to `.env` and set `ANTHROPIC_API_KEY`. When a key is set, calls go to the API instead. Force either with `"provider": "claude-cli"` or `"provider": "api"` in `config/settings.local.json`.
+5. Optional: change models in `config/settings.local.json` (not committed), for example `{"task_models": {"brief": "opus", "edit-dev": "opus"}}` to run the brief and developmental pass on Opus.
 
 ## Make the inputs
 

@@ -15,7 +15,6 @@ import { parseArgs } from "node:util";
 import {
   buildChapterContext,
   buildStyleSheet,
-  createAnthropicClient,
   draftChapter,
   openingParagraph,
   runPass,
@@ -26,7 +25,7 @@ import {
   type PipelineSettings,
 } from "@me/pipeline";
 import { BriefOutput, findForbidden, OutlineOutput, VoiceProfile, type CallMeta } from "@me/shared";
-import { loadSettings, REPO_ROOT } from "./lib/settings";
+import { createClient, loadSettings, REPO_ROOT } from "./lib/settings";
 
 const { values } = parseArgs({ options: { chapters: { type: "string", default: "2" }, label: { type: "string", default: "" } } });
 
@@ -123,11 +122,9 @@ export async function runEval(ai: AIClient, settings: PipelineSettings, outRoot:
 const isMain = import.meta.url === `file://${process.argv[1]}`;
 if (isMain) {
   const settings = loadSettings();
-  if (!process.env.ANTHROPIC_API_KEY) {
-    console.error("ANTHROPIC_API_KEY is not set.");
-    process.exit(1);
-  }
-  runEval(createAnthropicClient(settings), settings, join(REPO_ROOT, "eval"), Number(values.chapters), values.label)
+  const { ai, label } = createClient(settings);
+  console.log(`AI: ${label}`);
+  runEval(ai, settings, join(REPO_ROOT, "eval"), Number(values.chapters), values.label)
     .then((r) => console.log(`Eval written to ${r.dir}`))
     .catch((e: unknown) => {
       console.error(`Error: ${(e as Error).message}`);

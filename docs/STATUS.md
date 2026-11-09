@@ -4,21 +4,21 @@ Phase 0: prompt pipeline. Code complete; exit test not started. Phase 0 is not c
 
 ## Done this session
 
-- pnpm monorepo, strict TypeScript, Vitest, CI (typecheck plus 84 tests, Pandoc installed in CI).
+- pnpm monorepo, strict TypeScript, Vitest, CI (typecheck plus 90 tests, Pandoc installed in CI).
 - `packages/shared`: sanitizer, hard text QA check, word count, zod schemas. `packages/prompts`: versioned loader with slot validation.
 - `prompts/`: the eleven 1.0.0 templates, translated from `docs/sop.md` and `docs/publishing-system-v2.md`. Conflicts in `docs/prompt-notes.md`.
 - `packages/pipeline`: brief, outline with the four checks, draft with running summary, four edit passes with the 40 percent cap, voice and fact guards, numbered change logs, revert by number, claim ledger, matter.
 - `packages/export`: DOCX through Pandoc on a 6 x 9 reference document.
-- `scripts/phase0.ts` (runbook in `docs/PHASE0.md`) and `scripts/eval.ts`.
+- `scripts/phase0.ts` (runbook in `docs/PHASE0.md`) and `scripts/eval.ts`. Both run on the operator's Claude login through the Claude Code CLI, or on the API when a key is set.
 
 ## What the operator should test
 
-1. Follow `docs/PHASE0.md`: set `ANTHROPIC_API_KEY`, write a voice profile and two book inputs from two different briefs.
+1. Follow `docs/PHASE0.md`: log in to Claude Code (no API key needed), write a voice profile and two book inputs from two different briefs.
 2. `pnpm phase0 run <input.json>` for each, approving the brief and outline at the gates.
 3. Read each DOCX with `report.md` and `change-log.md` beside it. The exit test: would you publish it after your own light pass?
 4. Note every template gap. I fix templates, bump versions, and rerun.
 
-No real model call has run yet; this session had no API key. Everything is tested against a fake client.
+One real call has run through the Claude CLI client (pain-queries, Sonnet 5.5, valid JSON). No full book has run yet.
 
 ## Open questions
 

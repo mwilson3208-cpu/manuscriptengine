@@ -30,8 +30,10 @@ export interface ModelSettings {
   task_models?: Record<string, string>;
   /** Optional effort level passed to the API. Null leaves the model default. */
   effort?: "low" | "medium" | "high" | "xhigh" | "max" | null;
-  /** Use the server-side refusal fallback on models that support it. */
+  /** Use the server-side refusal fallback on models that support it. API provider only. */
   refusal_fallback?: boolean;
+  /** "claude-cli" runs calls through the operator's Claude Code login; "api" uses ANTHROPIC_API_KEY; "auto" picks api when a key is set. */
+  provider?: "auto" | "api" | "claude-cli";
 }
 
 export class AIError extends Error {
