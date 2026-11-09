@@ -1,0 +1,28 @@
+{
+  "name": "Eval Fixture Voice",
+  "identity_type": "pen_name",
+  "bio_short": "Eval fixture. Not a real author.",
+  "bio_long": "Eval fixture. Not a real author.",
+  "rules": {
+    "perspective": "second person, with first person for the author's own observations",
+    "sentence_length": { "min": 6, "max": 24 },
+    "paragraph_length": "two to four sentences",
+    "formality": "plain and direct, like a coach talking to one client across a desk",
+    "humor": "light and dry, at most once per chapter",
+    "lists_vs_prose": "prose by default; numbered steps only for a procedure the reader follows",
+    "signature_moves": {
+      "chapter_openers": "start inside a specific moment the reader recognizes",
+      "action_steps": "one step, sized to finish in under 30 minutes, stated as an instruction",
+      "examples": "name the person, the situation, what they did, and what happened"
+    }
+  },
+  "preferred_terms": ["warm introduction", "contact", "ask"],
+  "banned_terms": ["game-changer", "unlock your potential", "level up", "in today's fast-paced world", "journey", "leverage your network", "it's important to note"],
+  "samples": [
+    {
+      "title": "Fixture sample",
+      "text": "You do not need a bigger network. You need a smaller list that you actually use. Most people I work with have three hundred contacts and talk to six of them. That is not a networking problem. It is a routine problem, and routines are fixable. Pick five names. Write them on a card. Put the card where you will see it on Friday at nine. That is the whole first step, and it takes four minutes."
+    }
+  ],
+  "language": "en"
+}

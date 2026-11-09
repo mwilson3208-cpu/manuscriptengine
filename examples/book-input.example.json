@@ -1,0 +1,23 @@
+{
+  "title_id": "BZ-2-001",
+  "working_title": "REPLACE: working title",
+  "seed_description": "REPLACE: one paragraph on the reader, the problem, and the angle",
+  "lane": "BZ",
+  "language": "en",
+  "author_name": "REPLACE: name on the cover",
+  "imprint": "Power Reads Publishing",
+  "target_words": 20000,
+  "drafting_source": "ai_drafted",
+  "intensity": "standard",
+  "companion_course_url": "",
+  "voice_profile": "voices/voice.example.json",
+  "materials": {
+    "examples": [
+      "REPLACE: a real example, story, or client pattern the book must use",
+      "REPLACE: another one"
+    ],
+    "reader_language": ["REPLACE: phrases real readers use, from reviews, client calls, or EPN conversations"],
+    "competitor_notes": "REPLACE: what the top three comps cover and what their 1 and 3 star reviews complain about",
+    "notes": ""
+  }
+}

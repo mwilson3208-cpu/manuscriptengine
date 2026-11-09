@@ -1,0 +1,33 @@
+{
+  "name": "manuscript-engine",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.28.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "check": "pnpm typecheck && pnpm test",
+    "phase0": "tsx --env-file-if-exists=.env scripts/phase0.ts",
+    "eval": "tsx --env-file-if-exists=.env scripts/eval.ts",
+    "studio": "tsx --env-file-if-exists=.env scripts/studio.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2",
+    "vitest": "^5.1.0"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^1.6.0",
+    "@me/export": "workspace:*",
+    "@me/pipeline": "workspace:*",
+    "@me/prompts": "workspace:*",
+    "@me/shared": "workspace:*",
+    "diff": "^9.0.0",
+    "yaml": "^2.9.1",
+    "zod": "^4.6.7"
+  }
+}

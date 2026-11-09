@@ -1,0 +1,153 @@
+{
+  "intro": {
+    "promise": "A 30-minute Friday routine will bring you warm introductions without a single event.",
+    "reason_to_keep_reading": "Chapter 1 shows you why the room was never the answer, and chapter 3 has you sending messages this Friday.",
+    "word_target": 1200
+  },
+  "chapters": [
+    {
+      "title": "The Routine Beats the Room",
+      "goal": "Replace events with a 30-minute weekly routine.",
+      "points": [
+        "Why events fail introverts",
+        "What a routine gives you that a room does not",
+        "The 30-minute time box"
+      ],
+      "example": "Illustrative composite: an engineer turned consultant who replaced one monthly event with the Friday Five and kept the time",
+      "action_step": "Block 30 minutes every Friday morning on your calendar.",
+      "word_target": 2200,
+      "frameworks_introduced": [],
+      "frameworks_used": [],
+      "transition": "Next, build the list you will use."
+    },
+    {
+      "title": "Build the List of Forty",
+      "goal": "Assemble 40 contacts you already know.",
+      "points": [
+        "Where the forty names come from",
+        "Dormant ties are worth more than strangers",
+        "Cutting the list to people you would help"
+      ],
+      "example": "Illustrative composite: Dana sorting 400 LinkedIn connections down to 40 names in one evening",
+      "action_step": "Write 40 names in a spreadsheet with one column for how you know them.",
+      "word_target": 2200,
+      "frameworks_introduced": [],
+      "frameworks_used": [],
+      "transition": "Next, send the first five."
+    },
+    {
+      "title": "The Friday Five",
+      "goal": "Send five short, specific messages every Friday.",
+      "points": [
+        "What a Friday Five message says",
+        "Specific beats clever",
+        "Sending all five before 10 a.m."
+      ],
+      "example": "Illustrative composite: Dana's first Friday Five, sent to five former colleagues, two replies within a day",
+      "action_step": "Send your first Friday Five this Friday.",
+      "word_target": 2200,
+      "frameworks_introduced": [
+        "The Friday Five"
+      ],
+      "frameworks_used": [],
+      "transition": "Next, decide what each reply means."
+    },
+    {
+      "title": "Climb the Warmth Ladder",
+      "goal": "Move each contact one rung at a time.",
+      "points": [
+        "The four rungs: reconnect, help, ask, introduce",
+        "Signs a contact is ready for the next rung",
+        "Never skip a rung"
+      ],
+      "example": "Illustrative composite: a bookkeeper who moved a dormant former manager up the Warmth Ladder over six weeks",
+      "action_step": "Mark each of your 40 contacts with their current rung.",
+      "word_target": 2200,
+      "frameworks_introduced": [
+        "Warmth Ladder"
+      ],
+      "frameworks_used": [
+        "The Friday Five"
+      ],
+      "transition": "Next, give before you ask."
+    },
+    {
+      "title": "Help First",
+      "goal": "Offer something useful before any ask.",
+      "points": [
+        "Small help that costs you ten minutes",
+        "Introductions you can make for others",
+        "Help that matches the contact, not you"
+      ],
+      "example": "Illustrative composite: Dana sending a former colleague a job lead before asking for anything",
+      "action_step": "Choose one contact and send them one useful thing this week.",
+      "word_target": 2200,
+      "frameworks_introduced": [],
+      "frameworks_used": [
+        "Warmth Ladder"
+      ],
+      "transition": "Next, make the ask."
+    },
+    {
+      "title": "Make the Ask",
+      "goal": "Ask for one specific introduction.",
+      "points": [
+        "The one-sentence ask",
+        "Who to ask for",
+        "Making it easy to say yes"
+      ],
+      "example": "Illustrative composite: Dana asking a former manager for an introduction to one named HR director",
+      "action_step": "Write your one-sentence ask and send it to one contact on the ask rung.",
+      "word_target": 2200,
+      "frameworks_introduced": [],
+      "frameworks_used": [
+        "Warmth Ladder",
+        "The Friday Five"
+      ],
+      "transition": "Next, track every ask."
+    },
+    {
+      "title": "Keep the Ask Ledger",
+      "goal": "Log every ask so you learn what works.",
+      "points": [
+        "The five columns of the ledger",
+        "Follow-up dates you actually keep",
+        "Reading the ledger once a month"
+      ],
+      "example": "Illustrative composite: a residential plumber who logged 12 asks in an Ask Ledger and learned that past customers, not other trades, sent him work",
+      "action_step": "Start your Ask Ledger with every ask from the last 30 days.",
+      "word_target": 2200,
+      "frameworks_introduced": [
+        "Ask Ledger"
+      ],
+      "frameworks_used": [
+        "The Friday Five"
+      ],
+      "transition": "Next, keep the routine alive in bad weeks."
+    },
+    {
+      "title": "Protect the Routine",
+      "goal": "Keep the routine running when work gets busy.",
+      "points": [
+        "The minimum version for a bad week",
+        "What to do after a missed Friday",
+        "Reviewing the routine every quarter"
+      ],
+      "example": "Illustrative composite: the engineer turned consultant keeping the Friday Five through a three-week project crunch",
+      "action_step": "Write your minimum Friday routine on the card next to your five names.",
+      "word_target": 2200,
+      "frameworks_introduced": [],
+      "frameworks_used": [
+        "The Friday Five",
+        "Warmth Ladder",
+        "Ask Ledger"
+      ],
+      "transition": ""
+    }
+  ],
+  "conclusion": {
+    "transformation": "You run a Friday routine that produces introductions on its own schedule.",
+    "companion_course": "The course gives you the message templates, the Ask Ledger sheet, and a 4-week check-in.",
+    "word_target": 1200
+  }
+}

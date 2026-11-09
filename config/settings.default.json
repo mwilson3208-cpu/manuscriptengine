@@ -1,0 +1,14 @@
+{
+  "models": { "sonnet": "claude-sonnet-5-5", "opus": "claude-opus-5-5" },
+  "task_models": {},
+  "effort": null,
+  "refusal_fallback": true,
+  "provider": "auto",
+  "chapter_min": 8,
+  "chapter_max": 12,
+  "word_tolerance": 0.1,
+  "outline_total_tolerance": 0.1,
+  "edit_cap": 0.4,
+  "similarity_threshold": 0.85,
+  "summary_word_cap": 1500
+}
